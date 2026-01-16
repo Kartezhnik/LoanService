@@ -49,6 +49,11 @@ namespace Application.Interactors.Loans.Queries.GetLoans
                 query.PageSize,
                 cancellationToken);
 
+            foreach (var loan in loans)
+            {
+                Console.WriteLine($"DEBUG: LoanId: {loan.Id}, Amount: {loan.Amount}, Status: {loan.Status}");
+            }
+
             var loanResponses = loans.Adapt<IReadOnlyList<LoanResponse>>();
 
             return new PagedResult<LoanResponse>(

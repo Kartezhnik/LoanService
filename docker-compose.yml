@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: loan-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: LoanServiceDb         
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"                
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  loanserviceapi:
+    build:
+      context: .       
+      dockerfile: LoanServiceAPI/Dockerfile
+    container_name: loan-backend
+    restart: always
+    ports:
+      - "8082:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=LoanServiceDb;Username=postgres;Password=password
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: loan-frontend
+    restart: always
+    ports:
+      - "8081:80"                  
+    depends_on:
+      - loanserviceapi
+
+volumes:
+  postgres_data:

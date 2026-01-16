@@ -1,0 +1,23 @@
+# Этап 1: сборка
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Копируем csproj и восстанавливаем зависимости (кэширование слоёв)
+COPY *.csproj ./
+RUN dotnet restore
+
+# Копируем весь код и публикуем
+COPY . ./
+WORKDIR /src
+RUN dotnet publish -c Release -o /app/publish --no-restore
+
+# Этап 2: runtime-образ (лёгкий)
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+COPY --from=build /app/publish .
+EXPOSE 8080                    
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+# Запуск
+ENTRYPOINT ["dotnet", "LoanServiceAPI.dll"]  

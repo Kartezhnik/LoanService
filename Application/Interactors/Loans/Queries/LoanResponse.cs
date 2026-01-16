@@ -16,7 +16,7 @@ namespace Application.Interactors.Loans.Queries
         public LoanResponse(
             Guid id,
             Status status,
-            string numder,
+            string number,
             decimal amount,
             int termValue,
             decimal interestValue,
@@ -25,12 +25,14 @@ namespace Application.Interactors.Loans.Queries
         {
             Id = id;
             Status = status;
-            Number = numder;
+            Number = number;
             Amount = amount;
             TermValue = termValue;
             InterestValue = interestValue;
             CreatedAt = createdAt;
             ModifiedAt = modifiedAt;
         }
+
+        public LoanResponse() { }
     }
 }

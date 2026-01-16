@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36202.13 d17.14
+VisualStudioVersion = 17.14.36202.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoanServiceAPI", "LoanServiceAPI\LoanServiceAPI.csproj", "{C9AE3B84-8B5A-4B66-A500-9D0391D40BDD}"
 EndProject
@@ -10,6 +10,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{5E505A67-5F69-4517-B0D4-DC8537678B51}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{EEE4105C-47D5-46C6-9893-524CDCD8D75E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5E505A67-5F69-4517-B0D4-DC8537678B51} = {5E505A67-5F69-4517-B0D4-DC8537678B51}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{78DDF141-B2D6-4CDE-8764-2E1D20ED53C7}"
 EndProject

@@ -30,5 +30,7 @@ namespace Application.Interactors.Loans.Queries.GetLoans
             PageNumber = Math.Max(1, pageNumber);    
             PageSize = Math.Clamp(pageSize, 5, 100);
         }
+
+        public GetLoansQuery() { }
     }
 }

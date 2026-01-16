@@ -1,31 +1,34 @@
-# См. статью по ссылке https://aka.ms/customizecontainer, чтобы узнать как настроить контейнер отладки и как Visual Studio использует этот Dockerfile для создания образов для ускорения отладки.
-
-# В зависимости от операционной системы хост-компьютеров, которые будут выполнять сборку контейнеров или запускать их, может потребоваться изменить образ, указанный в инструкции FROM.
-# Дополнительные сведения см. на странице https://aka.ms/containercompat
-
-# Этот этап используется при запуске из VS в быстром режиме (по умолчанию для конфигурации отладки)
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-1809 AS base
+# ���� 1: ������� ����� ��� ������� (Runtime)
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 80
+EXPOSE 443
 
-
-# Этот этап используется для сборки проекта службы
-FROM mcr.microsoft.com/dotnet/sdk:8.0-nanoserver-1809 AS build
-ARG BUILD_CONFIGURATION=Release
+# ���� 2: ������ (SDK)
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+
+# �������� ����� �������� ��� �������������� ������������
+# ��� ��������� ���������� ���� � �������� ����������� ������
 COPY ["LoanServiceAPI/LoanServiceAPI.csproj", "LoanServiceAPI/"]
-RUN dotnet restore "./LoanServiceAPI/LoanServiceAPI.csproj"
+COPY ["Application/Application.csproj", "Application/"]
+COPY ["Domain/Domain.csproj", "Domain/"]
+COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["Presentation/Presentation.csproj", "Presentation/"]
+
+# ��������������� �����������
+RUN dotnet restore "LoanServiceAPI/LoanServiceAPI.csproj"
+
+# �������� �� ��������� � ��������
 COPY . .
 WORKDIR "/src/LoanServiceAPI"
-RUN dotnet build "./LoanServiceAPI.csproj" -c %BUILD_CONFIGURATION% -o /app/build
+RUN dotnet build "LoanServiceAPI.csproj" -c Release -o /app/build
 
-# Этот этап используется для публикации проекта службы, который будет скопирован на последний этап
+# ���� 3: ����������
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./LoanServiceAPI.csproj" -c %BUILD_CONFIGURATION% -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "LoanServiceAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Этот этап используется в рабочей среде или при запуске из VS в обычном режиме (по умолчанию, когда конфигурация отладки не используется)
+# ���� 4: ��������� �����
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .

@@ -1,7 +1,5 @@
-﻿using Application.DTOs;
-using Application.Interactors.Loans.Commands.CreateLoan;
+﻿using Application.Interactors.Loans.Commands.CreateLoan;
 using Application.Interactors.Loans.Commands.ToggleLoanStatus;
-using Application.Interactors.Loans.Queries;
 using Application.Interactors.Loans.Queries.GetLoans;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,13 +8,13 @@ namespace Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class LoanController : ControllerBase
+    public class LoansController : ControllerBase
     {
         private readonly CreateLoanCommandHandler _createLoanCommandHandler;
         private readonly ToggleLoanCommandHandler _toggleLoanCommandHandler;
         private readonly GetLoansQueryHandler _getLoansQueryHandler;
 
-        public LoanController(
+        public LoansController(
             CreateLoanCommandHandler createLoanCommandHandler,
             ToggleLoanCommandHandler toggleLoanCommandHandler,
             GetLoansQueryHandler getLoansQueryHandler)
@@ -27,7 +25,7 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetLoans([FromBody] GetLoansQuery query)
+        public async Task<IActionResult> GetLoans([FromQuery] GetLoansQuery query)
         {
             var response = await _getLoansQueryHandler.Handle(query, HttpContext.RequestAborted);
 
@@ -43,10 +41,12 @@ namespace Presentation.Controllers
         }
 
         [HttpPatch("{id}/toggle")]
-        public async Task<IActionResult> ToggleStatus([FromBody] ToggleLoanCommand command)
+        public async Task<IActionResult> ToggleStatus([FromRoute] Guid id, [FromBody] ToggleLoanCommand command)
         {
-            var response = await _toggleLoanCommandHandler.Handle(command, HttpContext.RequestAborted);
+            // Гарантируем, что ID из URL попадет в команду, даже если фронт прислал пустое тело
+            command.Id = id;
 
+            var response = await _toggleLoanCommandHandler.Handle(command, HttpContext.RequestAborted);
             return Ok(response);
         }
     }

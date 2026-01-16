@@ -30,7 +30,7 @@ namespace Application.Interactors.Loans.Commands.CreateLoan
         {
             await _validator.ValidateAndThrowAsync(command, cancellationToken);
 
-            Loan loan = _mapper.Adapt<Loan>();
+            Loan loan = command.Adapt<Loan>();
 
             loan.Id = Guid.NewGuid();
             loan.Number = await _loanNumberGenerator.GenerateAsync();

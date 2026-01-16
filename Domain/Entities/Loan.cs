@@ -15,7 +15,7 @@ namespace Domain.Entities
         public Loan(
             Guid id,
             Status status,
-            string numder,
+            string number,
             decimal amount,
             int termValue,
             decimal interestValue,
@@ -24,7 +24,7 @@ namespace Domain.Entities
         {
             Id = id;
             Status = status;
-            Number = numder;
+            Number = number;
             Amount = amount;
             TermValue = termValue;
             InterestValue = interestValue;

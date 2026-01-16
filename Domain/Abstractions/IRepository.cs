@@ -1,12 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace Domain.Abstractions
 {
-    internal interface IRepository
+    public interface IRepository<T>
     {
+        public Task<IReadOnlyList<T>> GetByFilterAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken);
+        public Task<IReadOnlyList<T>> GetByFilterAsync(
+            Expression<Func<T, bool>> filter,
+            int pageNumber,
+            int pageSize,
+            string sortBy,
+            bool sortDescending,
+            CancellationToken cancellationToken);
+
+        public Task CreateAsync(T entity, CancellationToken cancellationToken);
+        public Task Update(T entity);
+        public Task Delete(T entity);
     }
 }

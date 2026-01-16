@@ -4,9 +4,9 @@ namespace Application.Interactors.Loans.Commands.CreateLoan
 {
     public sealed record CreateLoanCommand
     {
-        public decimal Amount { get; set; }
-        public int TermValue { get; set; }
-        public decimal InterestValue { get; set; }
+        public decimal Amount { get; init; }
+        public int TermValue { get; init; }
+        public decimal InterestValue { get; init; }
 
         public CreateLoanCommand(
             decimal amount,

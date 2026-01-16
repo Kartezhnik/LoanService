@@ -9,12 +9,11 @@ namespace Domain.Abstractions
             Expression<Func<T, bool>> filter,
             int pageNumber,
             int pageSize,
-            string sortBy,
-            bool sortDescending,
             CancellationToken cancellationToken);
 
         public Task CreateAsync(T entity, CancellationToken cancellationToken);
         public Task Update(T entity);
         public Task Delete(T entity);
+        public Task<int> CountAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken);
     }
 }

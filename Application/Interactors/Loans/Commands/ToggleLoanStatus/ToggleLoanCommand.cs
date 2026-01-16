@@ -2,7 +2,7 @@
 {
     public sealed record ToggleLoanCommand
     {
-        public Guid Id;
+        public Guid Id { get; init; }
         public ToggleLoanCommand(Guid id) => Id = id;
     }
 }

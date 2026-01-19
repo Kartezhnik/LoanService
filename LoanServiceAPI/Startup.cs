@@ -21,16 +21,13 @@ namespace LoanServiceAPI
             services.AddControllers()
         .AddJsonOptions(options =>
         {
-            // 1. Делаем так, чтобы Enum возвращался текстом ("Published"), а не числом (1)
             options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
-            // 2. Принудительно используем camelCase (amount вместо Amount)
             options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
             });
             services.AddEndpointsApiExplorer();
 
             DbContextConfig.AddDbContext(services, _configuration);
             RepositoriesConfig.AddRepositories(services);
-            ServicesConfig.AddServices(services);
             InteractorsConfig.AddInteractors(services);
             ValidatorsConfig.AddValidators(services);
 
@@ -65,7 +62,6 @@ namespace LoanServiceAPI
             //}
 
             app.UseMiddleware<ExceptionHandlingMiddleware>();
-            //app.UseHttpsRedirection();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

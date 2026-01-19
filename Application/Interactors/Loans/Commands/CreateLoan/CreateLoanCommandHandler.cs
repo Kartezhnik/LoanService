@@ -1,5 +1,4 @@
-﻿using Application.Abstractions;
-using Domain.Abstractions;
+﻿using Domain.Abstractions;
 using Domain.Entities;
 using FluentValidation;
 using Mapster;

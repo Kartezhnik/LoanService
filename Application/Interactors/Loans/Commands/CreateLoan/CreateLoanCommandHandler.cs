@@ -12,18 +12,15 @@ namespace Application.Interactors.Loans.Commands.CreateLoan
         private readonly IRepository<Loan> _repository;
         private readonly IValidator<CreateLoanCommand> _validator;
         private readonly IMapper _mapper;
-        private readonly ILoanNumberGenerator _loanNumberGenerator;
 
         public CreateLoanCommandHandler(
             IRepository<Loan> repository,
             IValidator<CreateLoanCommand> validator,
-            IMapper mapper,
-            ILoanNumberGenerator loanNumberGenerator)
+            IMapper mapper)
         {
             _repository = repository;
             _validator = validator;
             _mapper = mapper;
-            _loanNumberGenerator = loanNumberGenerator;
         }
 
         public async Task<Guid> Handle(CreateLoanCommand command, CancellationToken cancellationToken)

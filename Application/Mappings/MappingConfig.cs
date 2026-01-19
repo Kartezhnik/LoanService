@@ -12,10 +12,10 @@ namespace Application.Mappings
         {
             config.NewConfig<CreateLoanCommand, Loan>()
                 .Ignore(dest => dest.Id)
-                .Ignore(dest => dest.Number)
                 .Ignore(dest => dest.Status)
                 .Ignore(dest => dest.CreatedAt)
                 .Ignore(dest => dest.ModifiedAt)
+                .Map(dest => dest.Number, src => src.Number)
                 .Map(dest => dest.Amount, src => src.Amount)
                 .Map(dest => dest.TermValue, src => src.TermValue)
                 .Map(dest => dest.InterestValue, src => src.InterestValue);

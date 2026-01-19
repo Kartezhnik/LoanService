@@ -11,6 +11,7 @@
   })
 
   const rules = {
+    number: [{ required: true, message: 'Введите номер заявки', trigger: 'blur' }],
     amount: [{ required: true, message: 'Сумма > 0', trigger: 'blur' }],
     termValue: [{ required: true, message: 'Срок > 0', trigger: 'blur' }],
     interestValue: [{ required: true, message: 'Ставка > 0', trigger: 'blur' }]
@@ -19,7 +20,7 @@
   const router = useRouter()
 
   async function submit() {
-
+    if (!form.value.number.trim()) return alert('Введите номер заявки')
     if (form.value.amount <= 0) return alert('Сумма должна быть > 0')
     if (form.value.termValue <= 0) return alert('Срок > 0')
     if (form.value.interestValue <= 0) return alert('Ставка > 0')
@@ -41,6 +42,9 @@
 
 <template>
   <el-form :model="form" :rules="rules" label-width="140px">
+    <el-form-item label="Номер заявки" prop="number">
+      <el-input v-model="form.number" placeholder="Введите номер" />
+    </el-form-item>
     <el-form-item label="Сумма" prop="amount">
       <el-input-number v-model="form.amount" :min="1" controls-position="right" />
     </el-form-item>

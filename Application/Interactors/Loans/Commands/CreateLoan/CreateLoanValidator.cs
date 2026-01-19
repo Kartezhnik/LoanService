@@ -6,6 +6,10 @@ public sealed class CreateLoanCommandValidator : AbstractValidator<CreateLoanCom
 {
     public CreateLoanCommandValidator()
     {
+        RuleFor(x => x.Number)
+            .NotEmpty()
+            .WithMessage("Номер не должен быть пуст");
+
         RuleFor(x => x.Amount)
             .GreaterThan(0)
             .WithMessage("Сумма должна быть больше 0");

@@ -33,7 +33,6 @@ namespace Application.Interactors.Loans.Commands.CreateLoan
             Loan loan = command.Adapt<Loan>();
 
             loan.Id = Guid.NewGuid();
-            loan.Number = await _loanNumberGenerator.GenerateAsync();
             loan.Status = Status.Published;
             loan.CreatedAt = DateTimeOffset.UtcNow;
             loan.ModifiedAt = DateTimeOffset.UtcNow;

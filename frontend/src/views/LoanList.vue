@@ -40,13 +40,13 @@
       if (filter.value.maxTerm !== undefined) params.append('maxTerm', filter.value.maxTerm.toString())
 
       const res = await fetch(`/api/loans?${params.toString()}`)
-      if (!res.ok) throw new Error(`РћС€РёР±РєР°: ${res.status}`)
+      if (!res.ok) throw new Error(`Ошибка: ${res.status}`)
 
       const data = await res.json()
       loans.value = data.items ?? []
       total.value = data.totalCount ?? 0
     } catch (err) {
-      console.error('РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РіСЂСѓР·РёС‚СЊ Р·Р°СЏРІРєРё:', err)
+      console.error('Не удалось загрузить займы:', err)
     } finally {
       loading.value = false
     }
@@ -68,12 +68,11 @@
       loan.status = nextStatus
       loan.modifiedAt = new Date().toISOString()
     } catch (err) {
-      alert('РћС€РёР±РєР° РїСЂРё СЃРјРµРЅРµ СЃС‚Р°С‚СѓСЃР°')
+      alert('Ошибка при смене статуса')
       loan.status = oldStatus
     }
   }
 
-  // РЎР±СЂРѕСЃ С„РёР»СЊС‚СЂРѕРІ
   function resetFilters() {
     filter.value = {
       status: 'All',
@@ -92,75 +91,75 @@
   <div class="loans-page">
     <div class="header-actions">
       <el-button type="primary" @click="router.push('/loans/create')">
-        РЎРѕР·РґР°С‚СЊ Р·Р°СЏРІРєСѓ
+        Создать займ
       </el-button>
     </div>
 
     <el-card class="filter-card">
       <el-form :inline="true" :model="filter" size="default">
-        <el-form-item label="РЎС‚Р°С‚СѓСЃ">
+        <el-form-item label="Статус">
           <el-select v-model="filter.status" style="width: 140px" @change="loadLoans">
-            <el-option label="Р’СЃРµ" value="All" />
-            <el-option label="РћРїСѓР±Р»РёРєРѕРІР°РЅР°" value="Published" />
-            <el-option label="РЎРЅСЏС‚Р°" value="Unpublished" />
+            <el-option label="Все" value="All" />
+            <el-option label="Опубликовано" value="Published" />
+            <el-option label="Снято" value="Unpublished" />
           </el-select>
         </el-form-item>
 
-        <el-form-item label="РЎСѓРјРјР°">
-          <el-input-number v-model="filter.minAmount" placeholder="РћС‚" :controls="false" @change="loadLoans" />
+        <el-form-item label="Сумма">
+          <el-input-number v-model="filter.minAmount" placeholder="От" :controls="false" @change="loadLoans" />
           <span class="range-separator">-</span>
-          <el-input-number v-model="filter.maxAmount" placeholder="Р”Рѕ" :controls="false" @change="loadLoans" />
+          <el-input-number v-model="filter.maxAmount" placeholder="До" :controls="false" @change="loadLoans" />
         </el-form-item>
 
-        <el-form-item label="РЎСЂРѕРє">
-          <el-input-number v-model="filter.minTerm" placeholder="РћС‚" :controls="false" @change="loadLoans" />
+        <el-form-item label="Срок">
+          <el-input-number v-model="filter.minTerm" placeholder="От" :controls="false" @change="loadLoans" />
           <span class="range-separator">-</span>
-          <el-input-number v-model="filter.maxTerm" placeholder="Р”Рѕ" :controls="false" @change="loadLoans" />
+          <el-input-number v-model="filter.maxTerm" placeholder="До" :controls="false" @change="loadLoans" />
         </el-form-item>
 
         <el-form-item>
-          <el-button type="info" plain @click="resetFilters">РЎР±СЂРѕСЃРёС‚СЊ</el-button>
+          <el-button type="info" plain @click="resetFilters">Сбросить</el-button>
         </el-form-item>
       </el-form>
     </el-card>
 
     <el-table :data="loans" v-loading="loading" border stripe style="width: 100%">
-      <el-table-column prop="number" label="РќРѕРјРµСЂ" width="160" sortable />
+      <el-table-column prop="number" label="Номер" width="160" sortable />
 
-      <el-table-column prop="amount" label="РЎСѓРјРјР°" width="120">
+      <el-table-column prop="amount" label="Сумма" width="120">
         <template #default="{ row }">
           {{ Number(row.amount || 0).toLocaleString() }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="termValue" label="РЎСЂРѕРє" width="90" />
-      <el-table-column prop="interestValue" label="РЎС‚Р°РІРєР° %" width="110" />
+      <el-table-column prop="termValue" label="Срок" width="90" />
+      <el-table-column prop="interestValue" label="Ставка %" width="110" />
 
-      <el-table-column label="РЎС‚Р°С‚СѓСЃ" width="150">
+      <el-table-column label="Статус" width="150">
         <template #default="{ row }">
           <el-tag :type="isPublished(row.status) ? 'success' : 'info'" effect="dark">
-            {{ isPublished(row.status) ? 'РћРїСѓР±Р»РёРєРѕРІР°РЅР°' : 'РЎРЅСЏС‚Р°' }}
+            {{ isPublished(row.status) ? 'Опубликовано' : 'Снято' }}
           </el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="Р”Р°С‚С‹ (РЎРѕР·РґР°РЅРѕ / РР·РјРµРЅРµРЅРѕ)" width="220">
+      <el-table-column label="Даты (Создано / Изменено)" width="220">
         <template #default="{ row }">
           <div class="date-cell">
-            <span class="label">C:</span> {{ new Date(row.createdAt).toLocaleString() }}
+            <span class="label">С:</span> {{ new Date(row.createdAt).toLocaleString() }}
           </div>
           <div class="date-cell">
-            <span class="label">Р:</span> {{ new Date(row.modifiedAt).toLocaleString() }}
+            <span class="label">И:</span> {{ new Date(row.modifiedAt).toLocaleString() }}
           </div>
         </template>
       </el-table-column>
 
-      <el-table-column label="Р”РµР№СЃС‚РІРёРµ" min-width="160">
+      <el-table-column label="Действия" min-width="160">
         <template #default="{ row }">
           <el-button :type="isPublished(row.status) ? 'danger' : 'success'"
                      size="small"
                      @click="toggleStatus(row)">
-            {{ isPublished(row.status) ? 'РЎРЅСЏС‚СЊ СЃ РїСѓР±Р»РёРєР°С†РёРё' : 'РћРїСѓР±Р»РёРєРѕРІР°С‚СЊ' }}
+            {{ isPublished(row.status) ? 'Снять с публикации' : 'Опубликовать' }}
           </el-button>
         </template>
       </el-table-column>

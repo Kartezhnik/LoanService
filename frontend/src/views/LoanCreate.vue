@@ -31,7 +31,9 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form.value)
       })
+
       if (!res.ok) throw new Error()
+
       alert('Заявка создана!')
       router.push('/loans')
     } catch {
@@ -45,15 +47,22 @@
     <el-form-item label="Номер заявки" prop="number">
       <el-input v-model="form.number" placeholder="Введите номер" />
     </el-form-item>
+
     <el-form-item label="Сумма" prop="amount">
       <el-input-number v-model="form.amount" :min="1" controls-position="right" />
     </el-form-item>
+
     <el-form-item label="Срок" prop="termValue">
       <el-input-number v-model="form.termValue" :min="1" controls-position="right" />
     </el-form-item>
+
     <el-form-item label="Процентная ставка" prop="interestValue">
-      <el-input-number v-model="form.interestValue" :min="0.1" :precision="2" controls-position="right" />
+      <el-input-number v-model="form.interestValue"
+                       :min="0.1"
+                       :precision="2"
+                       controls-position="right" />
     </el-form-item>
+
     <el-form-item>
       <el-button type="primary" @click="submit">Создать заявку</el-button>
     </el-form-item>

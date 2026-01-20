@@ -43,7 +43,6 @@ namespace Presentation.Controllers
         [HttpPatch("{id}/toggle")]
         public async Task<IActionResult> ToggleStatus([FromRoute] Guid id, [FromBody] ToggleLoanCommand command)
         {
-            // Гарантируем, что ID из URL попадет в команду, даже если фронт прислал пустое тело
             command.Id = id;
 
             var response = await _toggleLoanCommandHandler.Handle(command, HttpContext.RequestAborted);
